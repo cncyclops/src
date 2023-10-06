@@ -83,7 +83,11 @@ enum class OfficeDriveOpenErrors {
   kDriveAlternateUrl = 5,
   kUnexpectedAlternateUrl = 6,
   kSuccess = 7,
-  kMaxValue = kSuccess,
+  kDriveDisabled = 8,
+  kNoDriveService = 9,
+  kDriveAuthenticationNotReady = 10,
+  kMeteredConnection = 11,
+  kMaxValue = kMeteredConnection,
 };
 
 // List of UMA enum values for opening Office files from OneDrive, with the
@@ -159,7 +163,12 @@ enum class OfficeFilesUploadResult {
   kDestinationUrlError = 15,
   kInvalidURL = 16,
   kCloudReauthRequired = 17,
-  kMaxValue = kCloudReauthRequired,
+  kInvalidAlternateUrl = 18,
+  kUnexpectedAlternateUrlHost = 19,
+  kSyncError = 20,
+  kSyncCancelledAndDeleted = 21,
+  kSyncCancelledAndTrashed = 22,
+  kMaxValue = kSyncCancelledAndTrashed,
 };
 
 constexpr char kGoogleDriveTaskResultMetricName[] =

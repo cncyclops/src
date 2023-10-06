@@ -696,6 +696,49 @@ size_t ServiceImageTransferCacheEntry::CachedSize() const {
   return size_;
 }
 
+sk_sp<SkImage> ServiceImageTransferCacheEntry::GetImageWithToneMapApplied(
+    float hdr_headroom,
+    bool needs_mips) const {
+  sk_sp<SkImage> image;
+
+  // Apply tone mapping.
+  // TODO(https://crbug.com/1286088): Pass a shared cache as a parameter.
+  gfx::ColorConversionSkFilterCache cache;
+  if (has_gainmap_) {
+    image = cache.ApplyGainmap(
+        image_, gainmap_image_, gainmap_info_, hdr_headroom,
+        image_->isTextureBacked() ? gr_context_ : nullptr,
+        image_->isTextureBacked() ? graphite_recorder_ : nullptr);
+  } else if (use_tone_curve_) {
+    image = cache.ApplyToneCurve(
+        image_, tone_curve_hdr_metadata_, tone_curve_sdr_max_luminance_nits_,
+        hdr_headroom, image_->isTextureBacked() ? gr_context_ : nullptr,
+        image_->isTextureBacked() ? graphite_recorder_ : nullptr);
+  }
+  if (!image) {
+    DLOG(ERROR) << "Image tone mapping failed";
+    return nullptr;
+  }
+
+  // Create mipmaps if requested.
+  if (image->isTextureBacked() && needs_mips && !image->hasMipmaps()) {
+    if (gr_context_) {
+      image = SkImages::TextureFromImage(
+          gr_context_, image, skgpu::Mipmapped::kYes, skgpu::Budgeted::kNo);
+    } else {
+      CHECK(graphite_recorder_);
+      SkImage::RequiredProperties props{.fMipmapped = true};
+      image = SkImages::TextureFromImage(graphite_recorder_, image_, props);
+    }
+    if (!image) {
+      DLOG(ERROR) << "Failed to generate mipmaps after tone mapping";
+      return nullptr;
+    }
+  }
+
+  return image;
+}
+
 bool ServiceImageTransferCacheEntry::Deserialize(
     GrDirectContext* gr_context,
     skgpu::graphite::Recorder* graphite_recorder,
@@ -711,8 +754,7 @@ bool ServiceImageTransferCacheEntry::Deserialize(
   PaintOpReader reader(data.data(), data.size(), options);
 
   // Parameters common to RGBA and YUVA images.
-  bool has_gainmap = false;
-  reader.Read(&has_gainmap);
+  reader.Read(&has_gainmap_);
   bool needs_mips = false;
   reader.Read(&needs_mips);
   absl::optional<TargetColorParams> target_color_params;
@@ -738,51 +780,58 @@ bool ServiceImageTransferCacheEntry::Deserialize(
   }
 
   // Read the gainmap image, if one was specified to exist.
-  sk_sp<SkImage> gainmap_image;
-  SkGainmapInfo gainmap_info;
-  if (has_gainmap) {
+  sk_sp<SkImage> gainmap_image_referencing_transfer_buffer;
+  if (has_gainmap_) {
     if (!target_color_params) {
       DLOG(ERROR) << "Gainmap images need target parameters to render.";
       return false;
     }
-    gainmap_image =
+    gainmap_image_ =
         ReadImage(reader, gr_context, graphite_recorder, mip_mapped_for_upload);
-    if (!gainmap_image) {
+    if (!gainmap_image_) {
       DLOG(ERROR) << "Failed to deserialize gainmap image.";
       return false;
     }
-    reader.Read(&gainmap_info);
+    if (!gainmap_image_->isTextureBacked()) {
+      gainmap_image_referencing_transfer_buffer = gainmap_image_;
+    }
+    reader.Read(&gainmap_info_);
   }
 
-  // Perform color conversion and tone mapping.
-  if (target_color_params) {
+  // Save the tone curve parameters, if they are to be used.
+  use_tone_curve_ = !has_gainmap_ && target_color_params &&
+                    target_color_params->enable_tone_mapping &&
+                    gfx::ColorConversionSkFilterCache::UseToneCurve(image_);
+  if (use_tone_curve_) {
+    tone_curve_hdr_metadata_ = target_color_params->hdr_metadata;
+    tone_curve_sdr_max_luminance_nits_ =
+        target_color_params->sdr_max_luminance_nits;
+  }
+
+  // Perform color conversion (if no tone mapping is needed).
+  if (target_color_params && !NeedsToneMapApplied()) {
     auto target_color_space = target_color_params->color_space.ToSkColorSpace();
     if (!target_color_space) {
       DLOG(ERROR) << "Invalid target color space.";
       return false;
     }
-
-    // TODO(https://crbug.com/1286088): Pass a shared cache as a parameter.
-    gfx::ColorConversionSkFilterCache cache;
-    // Allow a nullptr context for testing using the software renderer.
-    if (has_gainmap) {
-      image_ = cache.ApplyGainmap(
-          image_, gainmap_image, gainmap_info,
-          target_color_params->hdr_max_luminance_relative,
-          image_->isTextureBacked() ? gr_context_ : nullptr,
-          image_->isTextureBacked() ? graphite_recorder_ : nullptr);
+    if (graphite_recorder_) {
+      SkImage::RequiredProperties props{.fMipmapped = needs_mips};
+      image_ =
+          image_->makeColorSpace(graphite_recorder_, target_color_space, props);
     } else {
-      image_ = cache.ConvertImage(
-          image_, target_color_space, target_color_params->hdr_metadata,
-          target_color_params->sdr_max_luminance_nits,
-          target_color_params->hdr_max_luminance_relative,
-          target_color_params->enable_tone_mapping,
-          image_->isTextureBacked() ? gr_context_ : nullptr,
-          image_->isTextureBacked() ? graphite_recorder_ : nullptr);
+      // TODO(crbug.com/1443068): It's possible for both `gr_context` and
+      // `graphite_recorder` to be nullptr if `image_` is not texture backed.
+      // Need to handle this case (currently just goes through gr_context path
+      // with nullptr context).
+      image_ = image_->makeColorSpace(gr_context_, target_color_space);
+      if (needs_mips && gr_context_ && image_ && image_->isTextureBacked()) {
+        image_ = SkImages::TextureFromImage(
+            gr_context, image_, skgpu::Mipmapped::kYes, skgpu::Budgeted::kNo);
+      }
     }
-
     if (!image_) {
-      DLOG(ERROR) << "Failed image color conversion";
+      DLOG(ERROR) << "Failed image color conversion.";
       return false;
     }
 
@@ -791,38 +840,45 @@ bool ServiceImageTransferCacheEntry::Deserialize(
     plane_images_.clear();
     plane_sizes_.clear();
 
-    // If mipmaps were requested, create them after color conversion.
-    if (needs_mips && image_->isTextureBacked()) {
-      if (gr_context) {
-        image_ = SkImages::TextureFromImage(
-            gr_context, image_, skgpu::Mipmapped::kYes, skgpu::Budgeted::kNo);
-      } else {
-        CHECK(graphite_recorder);
-        SkImage::RequiredProperties props{.fMipmapped = true};
-        image_ = SkImages::TextureFromImage(graphite_recorder, image_, props);
-      }
-      if (!image_) {
-        DLOG(ERROR) << "Failed to generate mipmaps after color conversion";
-        return false;
-      }
+    // Ensure mipmaps were created if requested.
+    if (image_->isTextureBacked()) {
+      DCHECK_EQ(needs_mips, image_->hasMipmaps());
     }
   }
 
-  // If `image_` is still directly referencing the transfer buffer's memory,
-  // make a copy of it (because the memory will go away after this this call).
-  if (image_ == image_referencing_transfer_buffer) {
-    SkPixmap pixmap;
-    if (!image_->peekPixels(&pixmap)) {
-      NOTREACHED() << "Image should be referencing transfer buffer SkPixmap";
-    }
-    image_ = SkImages::RasterFromPixmapCopy(pixmap);
-    if (!image_) {
-      DLOG(ERROR) << "Failed to create raster copy";
-      return false;
-    }
+  // If `image_` or `gainmap_image_` is still directly referencing the transfer
+  // buffer's memory, make a copy of it (because the memory will go away after
+  // this this call).
+  auto copy_from_transfer_buffer =
+      [](sk_sp<SkImage>& image,
+         sk_sp<SkImage> image_referencing_transfer_buffer) {
+        if (!image || image != image_referencing_transfer_buffer) {
+          return true;
+        }
+        SkPixmap pixmap;
+        if (!image->peekPixels(&pixmap)) {
+          NOTREACHED()
+              << "Image should be referencing transfer buffer SkPixmap";
+        }
+        image = SkImages::RasterFromPixmapCopy(pixmap);
+        if (!image) {
+          DLOG(ERROR) << "Failed to create raster copy";
+          return false;
+        }
+        return true;
+      };
+  if (!copy_from_transfer_buffer(image_, image_referencing_transfer_buffer)) {
+    return false;
+  }
+  if (!copy_from_transfer_buffer(gainmap_image_,
+                                 gainmap_image_referencing_transfer_buffer)) {
+    return false;
   }
 
   size_ = image_->textureSize();
+  if (gainmap_image_) {
+    size_ += gainmap_image_->textureSize();
+  }
   return true;
 }
 
@@ -836,6 +892,10 @@ const sk_sp<SkImage>& ServiceImageTransferCacheEntry::GetPlaneImage(
 
 void ServiceImageTransferCacheEntry::EnsureMips() {
   if (!image_ || !image_->isTextureBacked()) {
+    return;
+  }
+  // Don't generate mipmaps for images that will not be used directly.
+  if (NeedsToneMapApplied()) {
     return;
   }
   if (image_->hasMipmaps()) {
@@ -869,6 +929,7 @@ void ServiceImageTransferCacheEntry::EnsureMips() {
             graphite_recorder_, plane_images_.at(plane), props);
       }
       if (!mipped_plane) {
+        DLOG(ERROR) << "Failed to mipmap plane.";
         return;
       }
       mipped_planes.push_back(std::move(mipped_plane));
@@ -878,7 +939,7 @@ void ServiceImageTransferCacheEntry::EnsureMips() {
         gr_context_, graphite_recorder_, mipped_planes, yuva_info_.value(),
         image_->refColorSpace() /* image_color_space */);
     if (!mipped_image) {
-      DLOG(ERROR) << "Failed to create YUV image from mipmapped planes";
+      DLOG(ERROR) << "Failed to create YUV image from mipmapped planes.";
       return;
     }
     // Note that we cannot update |size_| because the transfer cache keeps track

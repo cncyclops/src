@@ -4353,24 +4353,7 @@
                         "FederatedLauncherQueryAnalyticsTask",
                         "FederatedService",
                         "FederatedServiceScheduleTasks",
-                        "LauncherQueryFederatedAnalyticsPHH"
-                    ],
-                    "disable_features": [
-                        "FederatedTimezoneCodePhh"
-                    ]
-                },
-                {
-                    "name": "EnabledTimezoneCodePhh_20230906",
-                    "params": {
-                        "launch_stage": "prod"
-                    },
-                    "enable_features": [
-                        "FederatedService",
-                        "FederatedServiceScheduleTasks",
-                        "FederatedTimezoneCodePhh"
-                    ],
-                    "disable_features": [
-                        "FederatedLauncherQueryAnalyticsTask",
+                        "FederatedTimezoneCodePhh",
                         "LauncherQueryFederatedAnalyticsPHH"
                     ]
                 }
@@ -6181,6 +6164,25 @@
                     "name": "Enabled",
                     "enable_features": [
                         "EnableNetworkBandwidthReporting"
+                    ]
+                }
+            ]
+        }
+    ],
+    "EnableNtpHistoryClustersModuleDiscounts": [
+        {
+            "platforms": [
+                "chromeos",
+                "chromeos_lacros",
+                "linux",
+                "mac",
+                "windows"
+            ],
+            "experiments": [
+                {
+                    "name": "Enabled",
+                    "enable_features": [
+                        "NtpHistoryClustersModuleDiscounts"
                     ]
                 }
             ]
@@ -15361,7 +15363,7 @@
                     "name": "EnablePostTask50_20230125",
                     "params": {
                         "AsyncStartServiceWorkerForEmptyFetchHandler": "true",
-                        "AsyncStartServiceWorkerForEmptyFetchHandlerDurationInMs ": "50",
+                        "AsyncStartServiceWorkerForEmptyFetchHandlerDurationInMs": "50",
                         "SkipEmptyFetchHandler": "true",
                         "StartServiceWorkerForEmptyFetchHandler": "true"
                     },
@@ -15963,6 +15965,26 @@
                     "name": "Enabled",
                     "enable_features": [
                         "SparseObjectPaintProperties"
+                    ]
+                }
+            ]
+        }
+    ],
+    "SpdyHeadersToHttpResponseVerifyCorrectness": [
+        {
+            "platforms": [
+                "android",
+                "chromeos",
+                "chromeos_lacros",
+                "linux",
+                "mac",
+                "windows"
+            ],
+            "experiments": [
+                {
+                    "name": "Enabled",
+                    "enable_features": [
+                        "SpdyHeadersToHttpResponseVerifyCorrectness"
                     ]
                 }
             ]

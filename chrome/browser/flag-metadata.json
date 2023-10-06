@@ -692,7 +692,7 @@
       "vykochko@google.com",
       "autofill-squad-muc@google.com"
     ],
-    "expiry_milestone": 120
+    "expiry_milestone": 123
   },
   {
     "name": "autofill-move-legal-terms-and-icon-for-new-card-enrollment",
@@ -1494,11 +1494,6 @@
     "name": "crostini-gpu-support",
     "owners": [ "nverne", "davidmunro@google.com", "clumptini@google.com" ],
     "expiry_milestone": 130
-  },
-  {
-    "name": "crostini-ime-support",
-    "owners": [ "timloh", "sophialin@google.com" ],
-    "expiry_milestone": 120
   },
   {
     "name": "crostini-multi-container",
@@ -2547,7 +2542,7 @@
   {
     "name": "enable-delegated-compositing",
     "owners": [ "petermcneeley" ],
-    "expiry_milestone": 120
+    "expiry_milestone": 126
   },
   {
     "name": "enable-desk-button",
@@ -2811,7 +2806,7 @@
   {
     "name": "enable-federated-service",
     "owners": [ "alanlxl", "amoylan"],
-    "expiry_milestone": 120
+    "expiry_milestone": 122
   },
   {
     "name": "enable-feed-ablation",
@@ -6595,7 +6590,7 @@
     // chrome://flags.  See https://crbug.com/1246928.
     "name": "ozone-platform-hint",
     "owners": [ "rjkroege", "thomasanderson", "msisov@igalia.com", "nickdiego@igalia.com", "adunaev@igalia.com" ],
-    "expiry_milestone": 120
+    "expiry_milestone": 125
   },
   {
     "name": "page-content-annotations",
@@ -6900,7 +6895,7 @@
       "rainhard",
       "msramek",
       "chrome-privacy-controls@google.com"],
-    "expiry_milestone": 120
+    "expiry_milestone": 123
   },
   {
     "name": "privacy-guide-android",
@@ -6916,7 +6911,7 @@
       "rubindl",
       "msramek",
       "chrome-privacy-controls@google.com"],
-    "expiry_milestone": 121
+    "expiry_milestone": 123
   },
   {
     "name": "privacy-guide-preload",
@@ -6924,7 +6919,7 @@
       "rainhard",
       "msramek",
       "chrome-privacy-controls@google.com"],
-    "expiry_milestone": 121
+    "expiry_milestone": 124
   },
   {
     "name": "privacy-guide-preload-android",
@@ -6932,7 +6927,7 @@
       "rubindl",
       "msramek",
       "chrome-privacy-controls@google.com"],
-    "expiry_milestone": 121
+    "expiry_milestone": 124
   },
   {
     "name": "privacy-sandbox-ads-apis",
@@ -7526,6 +7521,11 @@
     "name": "shimless-rma-os-update",
     "owners": [ "zentaro", "gavinwill", "cros-peripherals@google.com" ],
     "expiry_milestone": 130
+  },
+  {
+    "name": "shimless-rma-sku-description",
+    "owners": [ "zentaro", "gavinwill", "chenghan", "cros-peripherals@google.com", "cros-shimless-tpe-eng@google.com" ],
+    "expiry_milestone": 124
   },
   {
     "name": "shopping-collection",
@@ -8708,8 +8708,8 @@
       "chromeos-camera-eng@google.com",
       "chromeos-gfx-video@google.com",
       // For MacOS and Windows
-      "video-cmi-mpp@google.com"
+      "video-performance-team@google.com"
     ],
-    "expiry_milestone": 120
+    "expiry_milestone": 130
   }
 ]

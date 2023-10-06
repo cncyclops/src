@@ -3371,9 +3371,6 @@ extern const char kCrostiniResetLxdDbDescription[];
 extern const char kCrostiniMultiContainerName[];
 extern const char kCrostiniMultiContainerDescription[];
 
-extern const char kCrostiniImeSupportName[];
-extern const char kCrostiniImeSupportDescription[];
-
 extern const char kCrostiniQtImeSupportName[];
 extern const char kCrostiniQtImeSupportDescription[];
 
@@ -3951,6 +3948,9 @@ extern const char kShelfAutoHideSeparationDescription[];
 
 extern const char kShimlessRMAComplianceCheckName[];
 extern const char kShimlessRMAComplianceCheckDescription[];
+
+extern const char kShimlessRMASkuDescriptionName[];
+extern const char kShimlessRMASkuDescriptionDescription[];
 
 extern const char kShimlessRMAOsUpdateName[];
 extern const char kShimlessRMAOsUpdateDescription[];

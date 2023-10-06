@@ -1112,12 +1112,13 @@ LayoutUnit LayoutBox::ScrollWidth() const {
     else
       return PhysicalLayoutOverflowRect().Width();
   }
-  // For objects with visible overflow, this matches IE.
-  // FIXME: Need to work right with writing modes.
-  if (StyleRef().IsLeftToRightDirection())
-    return std::max(ClientWidth(), LayoutOverflowRect().MaxX() - BorderLeft());
+  // For objects with scrollable overflow, this matches IE.
+  PhysicalRect overflow_rect = PhysicalLayoutOverflowRect();
+  if (!StyleRef().GetWritingDirection().IsFlippedX()) {
+    return std::max(ClientWidth(), overflow_rect.Right() - BorderLeft());
+  }
   return ClientWidth() -
-         std::min(LayoutUnit(), LayoutOverflowRect().X() - BorderLeft());
+         std::min(LayoutUnit(), overflow_rect.X() - BorderLeft());
 }
 
 LayoutUnit LayoutBox::ScrollHeight() const {
@@ -1133,7 +1134,8 @@ LayoutUnit LayoutBox::ScrollHeight() const {
   }
   // For objects with visible overflow, this matches IE.
   // FIXME: Need to work right with writing modes.
-  return std::max(ClientHeight(), LayoutOverflowRect().MaxY() - BorderTop());
+  return std::max(ClientHeight(),
+                  PhysicalLayoutOverflowRect().Bottom() - BorderTop());
 }
 
 int LayoutBox::PixelSnappedScrollWidth() const {
@@ -3162,7 +3164,7 @@ LayoutUnit LayoutBox::ContainingBlockLogicalHeightForPositioned(
   return height_result;
 }
 
-LayoutRect LayoutBox::LocalCaretRect(
+PhysicalRect LayoutBox::LocalCaretRect(
     int caret_offset,
     LayoutUnit* extra_width_to_end_of_line) const {
   NOT_DESTROYED();
@@ -3226,7 +3228,7 @@ LayoutRect LayoutBox::LocalCaretRect(
     rect.SetY(rect.Y() + PaddingTop() + BorderTop());
   }
 
-  return rect.ToLayoutRect();
+  return rect;
 }
 
 PositionWithAffinity LayoutBox::PositionForPointInFragments(
@@ -3456,23 +3458,8 @@ RecalcLayoutOverflowResult LayoutBox::RecalcLayoutOverflowNG() {
         }
       }
 
-      if (RuntimeEnabledFeatures::LayoutOverflowNoCloneEnabled()) {
-        if (layout_overflow) {
-          fragment.GetMutableForStyleRecalc().SetLayoutOverflow(
-              *layout_overflow);
-        }
-      } else {
-        // Create and set a new result (potentially with an updated
-        // layout-overflow) if either:
-        //  - The layout-overflow changed.
-        //  - An arbitrary descendant had its layout-overflow change (as
-        //    indicated by |rebuild_fragment_tree|).
-        if (rebuild_fragment_tree || layout_overflow) {
-          SCOPED_BLINK_UMA_HISTOGRAM_TIMER_HIGHRES(
-              "Blink.Layout.CloneFragmentsForLayoutOverflow");
-          layout_result = NGLayoutResult::CloneWithPostLayoutFragments(
-              *layout_result, layout_overflow);
-        }
+      if (layout_overflow) {
+        fragment.GetMutableForStyleRecalc().SetLayoutOverflow(*layout_overflow);
       }
     }
     SetLayoutOverflowFromLayoutResults();
@@ -3791,12 +3778,6 @@ NGPhysicalBoxStrut LayoutBox::BorderOutsetsForClipping() const {
 
   return overflow_clip_margin.Inflate(
       StyleRef().OverflowClipMargin()->GetMargin());
-}
-
-DISABLE_CFI_PERF
-LayoutRect LayoutBox::NoOverflowRect() const {
-  NOT_DESTROYED();
-  return FlipForWritingMode(PhysicalPaddingBoxRect());
 }
 
 PhysicalRect LayoutBox::VisualOverflowRect() const {

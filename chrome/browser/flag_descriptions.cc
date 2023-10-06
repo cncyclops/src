@@ -5833,16 +5833,11 @@ const char kCrostiniMultiContainerName[] = "Allow multiple Crostini containers";
 const char kCrostiniMultiContainerDescription[] =
     "Experimental UI for creating and managing multiple Crostini containers";
 
-const char kCrostiniImeSupportName[] = "Crostini IME support";
-const char kCrostiniImeSupportDescription[] =
-    "Support for IMEs (excluding VK) in Crostini for applications built with "
-    "GTK3 or Electron.";
-
 const char kCrostiniQtImeSupportName[] =
     "Crostini IME support for Qt applications";
 const char kCrostiniQtImeSupportDescription[] =
     "Experimental support for IMEs (excluding VK) in Crostini for applications "
-    "built with Qt. Requires #crostini-ime-support to be enabled.";
+    "built with Qt.";
 
 const char kCrostiniVirtualKeyboardSupportName[] =
     "Crostini Virtual Keyboard Support";
@@ -6880,6 +6875,11 @@ const char kShimlessRMAComplianceCheckName[] =
     "Enable compliance check in Shimless RMA";
 const char kShimlessRMAComplianceCheckDescription[] =
     "Enable device compliance check in the Shimless RMA flow";
+
+const char kShimlessRMASkuDescriptionName[] =
+    "Enable SKU description in Shimless RMA";
+const char kShimlessRMASkuDescriptionDescription[] =
+    "Enable device SKU description in the Shimless RMA flow";
 
 const char kShortcutCustomizationJellyName[] =
     "Enable jelly colors for the Shortcut Customization App";

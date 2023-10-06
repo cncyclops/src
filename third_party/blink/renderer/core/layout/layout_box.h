@@ -416,19 +416,17 @@ class CORE_EXPORT LayoutBox : public LayoutBoxModelObject {
 
   bool CanResize() const;
 
-  // Unlike most of the other box geometries, layout overflow is in the
-  // "physical coordinates in flipped block-flow direction" of the box.
-  LayoutRect NoOverflowRect() const;
-  LayoutRect LayoutOverflowRect() const {
+  DISABLE_CFI_PERF PhysicalRect NoOverflowRect() const {
     NOT_DESTROYED();
-    DCHECK(!IsLayoutMultiColumnSet());
-    return LayoutOverflowIsSet()
-               ? overflow_->layout_overflow->LayoutOverflowRect()
-               : NoOverflowRect();
+    return PhysicalPaddingBoxRect();
   }
   PhysicalRect PhysicalLayoutOverflowRect() const {
     NOT_DESTROYED();
-    return FlipForWritingMode(LayoutOverflowRect());
+    DCHECK(!IsLayoutMultiColumnSet());
+    return LayoutOverflowIsSet()
+               ? FlipForWritingMode(
+                     overflow_->layout_overflow->LayoutOverflowRect())
+               : NoOverflowRect();
   }
 
   PhysicalRect VisualOverflowRect() const final;
@@ -982,7 +980,7 @@ class CORE_EXPORT LayoutBox : public LayoutBoxModelObject {
 
   bool HasUnsplittableScrollingOverflow() const;
 
-  LayoutRect LocalCaretRect(
+  PhysicalRect LocalCaretRect(
       int caret_offset,
       LayoutUnit* extra_width_to_end_of_line = nullptr) const override;
 
