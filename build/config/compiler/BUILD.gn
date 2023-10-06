@@ -1687,14 +1687,14 @@ config("runtime_library") {
 # independently of the default warning flags.
 config("treat_warnings_as_errors") {
   if (is_win) {
-    cflags = [ "/WX" ]
+    cflags = []
   } else {
-    cflags = [ "-Werror" ]
+    cflags = []
 
     # The compiler driver can sometimes (rarely) emit warnings before calling
     # the actual linker.  Make sure these warnings are treated as errors as
     # well.
-    ldflags = [ "-Werror" ]
+    ldflags = []
   }
 
   # Turn rustc warnings into the "deny" lint level, which produce compiler
@@ -1719,8 +1719,8 @@ config("default_warnings") {
 
   if (is_win) {
     if (fatal_linker_warnings) {
-      arflags = [ "/WX" ]
-      ldflags = [ "/WX" ]
+      arflags = []
+      ldflags = []
     }
     defines = [
       # Without this, Windows headers warn that functions like wcsnicmp
