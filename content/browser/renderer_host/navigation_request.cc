@@ -1829,7 +1829,7 @@ NavigationRequest::NavigationRequest(
     DCHECK_EQ(is_overriding_user_agent(), entry->GetIsOverridingUserAgent());
   }
 
-  net::HttpRequestHeaders headers;
+  net::HttpRequestHeaders headers;//添加HTTP请求头
   // Only add specific headers when creating a NavigationRequest before the
   // network request is made, not at commit time.
   if (!is_synchronous_renderer_commit) {
@@ -1902,7 +1902,7 @@ NavigationRequest::NavigationRequest(
     }
   }
 
-  begin_params_->headers = headers.ToString();
+  begin_params_->headers = headers.ToString();//添加HTTP请求头，完毕
 
 #if BUILDFLAG(IS_ANDROID)
   RenderWidgetHostImpl* host = RenderWidgetHostImpl::From(
@@ -4999,7 +4999,7 @@ void NavigationRequest::OnStartChecksComplete(
                     IsInMainFrame() ? "MainFrame" : "Subframe"}),
       base::TimeTicks::Now() - will_start_request_time_);
 
-  loader_->Start();
+  loader_->Start();//http请求，请求网页的位置
   // DO NOT ADD CODE after this. The previous call to
   // NavigationURLLoader::Start() could cause the destruction of the
   // NavigationRequest.

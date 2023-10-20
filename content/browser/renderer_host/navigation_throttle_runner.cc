@@ -32,7 +32,7 @@
 namespace content {
 
 namespace {
-
+//在此断点，可以抓取NavigationRequest::WillStartRequest()之前执行事件的过程
 NavigationThrottle::ThrottleCheckResult ExecuteNavigationEvent(
     NavigationThrottle* throttle,
     NavigationThrottleRunner::Event event) {
@@ -139,7 +139,7 @@ void NavigationThrottleRunner::CallResumeForTesting() {
   RecordDeferTimeUKM();
   ProcessInternal();
 }
-
+//在此断点，可以抓取NavigationRequest::WillStartRequest()注册事件流程
 void NavigationThrottleRunner::RegisterNavigationThrottles() {
   // Note: |throttle_| might not be empty. Some NavigationThrottles might have
   // been registered with RegisterThrottleForTesting. These must reside at the
@@ -272,7 +272,7 @@ void NavigationThrottleRunner::AddThrottle(
 void NavigationThrottleRunner::ProcessInternal() {
   DCHECK_NE(Event::NoEvent, current_event_);
   base::WeakPtr<NavigationThrottleRunner> weak_ref = weak_factory_.GetWeakPtr();
-
+//在此断点，可以抓取NavigationRequest::WillStartRequest()之前执行事件的过程
   // Capture into a local variable the |navigation_id_| value, since this
   // object can be freed by any of the throttles being invoked and the trace
   // events need to be able to use the navigation id safely in such a case.

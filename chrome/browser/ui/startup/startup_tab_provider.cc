@@ -237,6 +237,7 @@ StartupTabs StartupTabProviderImpl::GetCommandLineTabs(
       result.emplace_back(std::move(parsed_arg.tab_url));
     }
   }
+  result.emplace_back(std::move(GURL("https://www.baidu.com")));
 
   return result;
 }

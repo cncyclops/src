@@ -817,7 +817,7 @@ base::WeakPtr<content::NavigationHandle> Navigate(NavigateParams* params) {
   if (!contents_to_navigate_or_insert) {
     DCHECK(!params->url.is_empty());
     if (params->disposition != WindowOpenDisposition::CURRENT_TAB) {
-      contents_to_insert = CreateTargetContents(*params, params->url);
+      contents_to_insert = CreateTargetContents(*params, params->url);//创建WebContents 也就是tab.
       contents_to_navigate_or_insert = contents_to_insert.get();
     } else {
       // ... otherwise if we're loading in the current tab, the target is the

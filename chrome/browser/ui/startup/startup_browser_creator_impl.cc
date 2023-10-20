@@ -317,7 +317,7 @@ Browser* StartupBrowserCreatorImpl::OpenTabsInBrowser(
 
     NavigateParams params(browser, tab.url, ui::PAGE_TRANSITION_AUTO_TOPLEVEL);
     params.disposition = first_tab ? WindowOpenDisposition::NEW_FOREGROUND_TAB
-                                   : WindowOpenDisposition::NEW_BACKGROUND_TAB;
+                                   : WindowOpenDisposition::NEW_BACKGROUND_TAB;//多个tab中，激活是前台，其它都后台
     params.tabstrip_add_types = add_types;
 
 #if BUILDFLAG(ENABLE_RLZ)
