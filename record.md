@@ -5,7 +5,17 @@ navigation中网页的网络请求，HTTP请求头的设置
 navigation的请求事件执行过程，请求之前注册所有类型事件，利用switch和状态标记触发不同的事件  
 tab 专题：  
 1. 枚举类 WindowOpenDisposition 给出了tab的打开类型，ui/base/window_open_disposition.h  
-2. ChromeBrowserMainParts::PostBrowserStart()  Browser启动后的一些加载工作，此时browser已经初始化完成，但loading content还没有开始，这里会调用AfterStartupTaskUtils::StartMonitoringStartup() 触发相关的observe
+2. ChromeBrowserMainParts::PostBrowserStart()  Browser启动后的一些加载工作，此时browser已经初始化完成，但loading content还没有开始，这里会调用AfterStartupTaskUtils::StartMonitoringStartup() 触发相关的observe  
+**a3**  
+browser_navigator.cc 870行 params->user_gesture 说明是否启用手势 
+infobar_utils.cc 中将AddInfoBarsIfNecessary()直接返回(置空)，可以删除tab中的[infobar](https://en.wikipedia.org/wiki/Infobar)     
+全屏设置的可疑位置 StartupBrowserCreatorImpl::MaybeToggleFullscreen()，该方法中有一个注释：In kiosk mode, we want to always be fullscreen.     
+TabStripModel::ForgetAllOpeners()，也许可以用来隐藏tab页  
+tab_strip_model.cc中 996行 set_reset_opener_on_active_tab_change()和隐藏也许有关  
+omnibox_view = delegate()->GetOmniboxView()  也许可以用来隐藏omnibox   
+ChromeLocationBarModelDelegate::ShouldDisplayURL() 显示URL
+
+
 
 
 **有用的函数和类**  

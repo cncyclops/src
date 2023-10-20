@@ -551,11 +551,11 @@ std::unique_ptr<content::WebContents> CreateTargetContents(
 #endif
 
   std::unique_ptr<WebContents> target_contents =
-      WebContents::Create(create_params);
+      WebContents::Create(create_params);// 这里会调用RenderProcessHostImpl::CreateRenderProcessHost()
 
   // New tabs can have WebUI URLs that will make calls back to arbitrary
   // tab helpers, so the entire set of tab helpers needs to be set up
-  // immediately.
+  // immediately.//这里加载所有tabhelper方法
   BrowserNavigatorWebContentsAdoption::AttachTabHelpers(target_contents.get());
   apps::SetAppIdForWebContents(params.browser->profile(), target_contents.get(),
                                params.app_id);
@@ -872,7 +872,7 @@ base::WeakPtr<content::NavigationHandle> Navigate(NavigateParams* params) {
 
     DCHECK(contents_to_insert);
     // The navigation should insert a new tab into the target Browser.
-    params->browser->tab_strip_model()->AddWebContents(
+    params->browser->tab_strip_model()->AddWebContents(//这是添加新的tab页
         std::move(contents_to_insert), params->tabstrip_index,
         params->transition, params->tabstrip_add_types, params->group);
   }

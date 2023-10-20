@@ -82,7 +82,7 @@ void AddInfoBarsIfNecessary(Browser* browser,
                             bool is_web_app) {
   if (!browser || !profile || browser->tab_strip_model()->count() == 0)
     return;
-
+  return;//直接返回(置空)，可以删除tab中的[infobar]
   // Show the Automation info bar unless it has been disabled by policy.
   bool show_bad_flags_security_warnings = ShouldShowBadFlagsSecurityWarnings();
 
