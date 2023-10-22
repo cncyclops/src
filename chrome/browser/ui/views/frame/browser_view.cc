@@ -871,7 +871,7 @@ BrowserView::BrowserView(std::unique_ptr<Browser> browser)
     SetCanFullscreen(browser_->create_params().can_fullscreen);
     SetCanMinimize(true);
   }
-
+  SetShowTitle(true);//左上角，tab上角的title去掉
   SetProperty(views::kElementIdentifierKey, kBrowserViewElementId);
 
   // Create user education resources unless headless mode is in effect.

@@ -17,7 +17,9 @@ ChromeLocationBarModelDelegate::ShouldDisplayURL() 显示URL
 **a4**  
 有用的log文件：chrome_debug1021-1.log   
 当前的所有断点文件   
-
+**a5**  
+browser_view.h专题   
+全屏有用的信息：chrome/browser/fullscreen.h，chrome/browser/fullscreen/android/，chrome/browser/fullscreen/android/java/，components/fullscreen_control/，ui/base/fullscreen_win.h，components/fullscreen_control/fullscreen_control_view.h，ui/views/win/fullscreen_handler.h
 
 
 

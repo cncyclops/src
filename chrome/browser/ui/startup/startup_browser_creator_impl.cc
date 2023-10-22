@@ -172,11 +172,11 @@ StartupBrowserCreatorImpl::StartupBrowserCreatorImpl(
 
 // static
 void StartupBrowserCreatorImpl::MaybeToggleFullscreen(Browser* browser) {
-  // In kiosk mode, we want to always be fullscreen.
-  if (IsKioskModeEnabled() || base::CommandLine::ForCurrentProcess()->HasSwitch(
-                                  switches::kStartFullscreen)) {
+  // In kiosk mode, we want to always be fullscreen.å¼ºåˆ¶å¼€å§‹äº†å…¨å±
+ // if (IsKioskModeEnabled() || base::CommandLine::ForCurrentProcess()->HasSwitch(
+  //                                switches::kStartFullscreen)) {
     chrome::ToggleFullscreenMode(browser);
-  }
+  //}
 }
 
 void StartupBrowserCreatorImpl::Launch(
@@ -317,7 +317,7 @@ Browser* StartupBrowserCreatorImpl::OpenTabsInBrowser(
 
     NavigateParams params(browser, tab.url, ui::PAGE_TRANSITION_AUTO_TOPLEVEL);
     params.disposition = first_tab ? WindowOpenDisposition::NEW_FOREGROUND_TAB
-                                   : WindowOpenDisposition::NEW_BACKGROUND_TAB;//¶à¸ötabÖÐ£¬¼¤»îÊÇÇ°Ì¨£¬ÆäËü¶¼ºóÌ¨
+                                   : WindowOpenDisposition::NEW_BACKGROUND_TAB;//ï¿½ï¿½ï¿½tabï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨
     params.tabstrip_add_types = add_types;
 
 #if BUILDFLAG(ENABLE_RLZ)
