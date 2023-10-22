@@ -142,10 +142,12 @@ Tab* TabContainerImpl::AddTab(std::unique_ptr<Tab> tab,
   // First add the tab to the view model, this is done because AddChildView sets
   // some tooltip information which tries to calculate the hit test, which needs
   // information about its adjacent tabs which it gets from the view model.
+ // if(tab.get().web_contents()->GetVisibleURL() != GURL("http://www.hit.edu.cn"))
+ // {
   AddTabToViewModel(tab.get(), model_index, pinned);
   Tab* tab_ptr = AddChildView(std::move(tab));
   OrderTabSlotView(tab_ptr);
-
+ // }
   // Don't animate the first tab, it looks weird, and don't animate anything
   // if the containing window isn't visible yet.
   if (GetTabCount() > 1 && GetWidget() && GetWidget()->IsVisible()) {
@@ -716,7 +718,7 @@ void TabContainerImpl::SetTabSlotVisibility() {
     if (should_be_visible != tab->GetVisible() && tab->group().has_value())
       visibility_changed_groups.insert(tab->group().value());
 
-    tab->SetVisible(should_be_visible);
+    tab->SetVisible(false);//(should_be_visible);//隐藏了tab页，只有第一个tab显示
   }
 
   // Update bounds for any groups containing a modified tab. N.B. this method

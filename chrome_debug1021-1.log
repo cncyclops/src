@@ -1,0 +1,93 @@
+[15796:8904:1021/062729.643:WARNING:chrome_main_delegate.cc(660)] This is Chrome version 120.0.6050.0 (not a warning)
+[15796:8904:1021/062729.686:WARNING:policy_logger.cc(151)] :components\enterprise\browser\controller\chrome_browser_cloud_management_controller.cc(88) Could not create policy manager as CBCM is not enabled.
+[15796:8904:1021/062729.830:WARNING:policy_logger.cc(153)] :components\policy\core\browser\configuration_policy_pref_store.cc(34) Policy ProfileSeparationDataMigrationSettings: 已忽略，因为未设置 ProfileSeparationSettings。
+[15796:8904:1021/062729.831:WARNING:policy_logger.cc(153)] :components\policy\core\browser\configuration_policy_pref_store.cc(34) Policy ProfileSeparationDataMigrationSettings: 已忽略，因为未设置 ProfileSeparationSettings。
+[15796:8904:1021/062730.045:ERROR:policy_logger.cc(157)] :components\enterprise\browser\controller\chrome_browser_cloud_management_controller.cc(163) Cloud management controller initialization aborted as CBCM is not enabled.
+[15796:8904:1021/062730.095:WARNING:policy_logger.cc(153)] :components\policy\core\browser\configuration_policy_pref_store.cc(34) Policy ProfileSeparationDataMigrationSettings: 已忽略，因为未设置 ProfileSeparationSettings。
+[15796:8904:1021/062730.096:WARNING:policy_logger.cc(153)] :components\policy\core\browser\configuration_policy_pref_store.cc(34) Policy ProfileSeparationDataMigrationSettings: 已忽略，因为未设置 ProfileSeparationSettings。
+[15796:8904:1021/062730.120:WARNING:account_consistency_mode_manager.cc(73)] Desktop Identity Consistency cannot be enabled as no OAuth client ID and client secret have been configured.
+[15796:8904:1021/062730.670:ERROR:cookie_controls_icon_view.cc(224)] CookieControl status is not initialized
+[15796:8904:1021/062730.670:ERROR:cookie_controls_icon_view.cc(224)] CookieControl status is not initialized
+[15796:8904:1021/062730.956:FATAL:tab_strip_layout_helper.cc(285)] Check failed: original_slot_index < static_cast<int>(slots_.size()) (0 vs. 0)model_index = 0 does not represent an existing tab
+	base::debug::CollectStackTrace [0x00007FFB54894127+39] (D:\chromium120\src\base\debug\stack_trace_win.cc:329)
+	base::debug::StackTrace::StackTrace [0x00007FFB5485316D+77] (D:\chromium120\src\base\debug\stack_trace.cc:221)
+	base::debug::StackTrace::StackTrace [0x00007FFB54853105+37] (D:\chromium120\src\base\debug\stack_trace.cc:218)
+	logging::LogMessage::~LogMessage [0x00007FFB5454F086+310] (D:\chromium120\src\base\logging.cc:726)
+	logging::LogMessage::~LogMessage [0x00007FFB54550DF9+41] (D:\chromium120\src\base\logging.cc:720)
+	logging::CheckError::~CheckError [0x00007FFB544F0545+85] (D:\chromium120\src\base\check.cc:272)
+	TabStripLayoutHelper::GetSlotIndexForExistingTab [0x00007FFB4E4B6981+257] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_strip_layout_helper.cc:289)
+	TabStripLayoutHelper::CalculateIdealBounds [0x00007FFB4E4B8118+200] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_strip_layout_helper.cc:247)
+	TabStripLayoutHelper::CalculatePreferredWidth [0x00007FFB4E4B8548+104] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_strip_layout_helper.cc:204)
+	TabContainerImpl::CalculatePreferredSize [0x00007FFB4CF241A3+131] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_container_impl.cc:823)
+	views::View::GetPreferredSize [0x00007FFB41016295+117] (D:\chromium120\src\ui\views\view.cc:542)
+	TabStrip::CalculatePreferredSize [0x00007FFB4AF69588+88] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_strip.cc:1784)
+	views::View::GetPreferredSize [0x00007FFB41016295+117] (D:\chromium120\src\ui\views\view.cc:542)
+	views::`anonymous namespace'::GetPreferredSize [0x00007FFB40FB9A34+340] (D:\chromium120\src\ui\views\layout\flex_layout_types.cc:158)
+	base::internal::FunctorTraits<gfx::Size (*)(views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, bool, const views::View *, const views::SizeBounds &),void>::Invoke<gfx::Size (*const &)(views::Min [0x00007FFB40FBBE9A+170] (D:\chromium120\src\base\functional\bind_internal.h:631)
+	base::internal::InvokeHelper<0,gfx::Size,0,1,2,3,4>::MakeItSo<gfx::Size (*const &)(views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, bool, const views::View *, const views::SizeBounds &),const  [0x00007FFB40FBBDDD+269] (D:\chromium120\src\base\functional\bind_internal.h:868)
+	base::internal::Invoker<base::internal::BindState<gfx::Size (*)(views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, bool, const views::View *, const views::SizeBounds &),views::MinimumFlexSizeRul [0x00007FFB40FBBCC4+84] (D:\chromium120\src\base\functional\bind_internal.h:968)
+	base::internal::Invoker<base::internal::BindState<gfx::Size (*)(views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, views::MinimumFlexSizeRule, views::MaximumFlexSizeRule, bool, const views::View *, const views::SizeBounds &),views::MinimumFlexSizeRul [0x00007FFB40FBBB88+120] (D:\chromium120\src\base\functional\bind_internal.h:932)
+	base::RepeatingCallback<gfx::Size (const views::View *, const views::SizeBounds &)>::Run [0x00007FFB40FA5D35+325] (D:\chromium120\src\base\functional\callback.h:336)
+	views::FlexLayout::GetPreferredSizeForRule [0x00007FFB40FA59B1+145] (D:\chromium120\src\ui\views\layout\flex_layout.cc:475)
+	views::FlexLayout::InitializeChildData [0x00007FFB40FA39D9+1145] (D:\chromium120\src\ui\views\layout\flex_layout.cc:547)
+	views::FlexLayout::CalculateProposedLayout [0x00007FFB40FA3119+729] (D:\chromium120\src\ui\views\layout\flex_layout.cc:424)
+	views::LayoutManagerBase::GetProposedLayout [0x00007FFB40FC8277+343] (D:\chromium120\src\ui\views\layout\layout_manager_base.cc:107)
+	views::LayoutManagerBase::GetAvailableSize [0x00007FFB40FC7FDA+266] (D:\chromium120\src\ui\views\layout\layout_manager_base.cc:69)
+	views::View::GetAvailableSize [0x00007FFB4101677E+94] (D:\chromium120\src\ui\views\view.cc:585)
+	TabStrip::GetAvailableSize [0x00007FFB4AF6945F+239] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_strip.cc:1769)
+	TabContainerImpl::GetAvailableWidthForTabContainer [0x00007FFB4CF227B5+117] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_container_impl.cc:653)
+	TabContainerImpl::CompleteAnimationAndLayout [0x00007FFB4CF2244C+28] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_container_impl.cc:637)
+	TabContainerImpl::AddTab [0x00007FFB4CF1DE7F+335] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_container_impl.cc:157)
+	TabStrip::AddTabAt [0x00007FFB4AF62CD2+354] (D:\chromium120\src\chrome\browser\ui\views\tabs\tab_strip.cc:1020)
+	BrowserTabStripController::AddTab [0x00007FFB4AF49E5F+143] (D:\chromium120\src\chrome\browser\ui\views\tabs\browser_tab_strip_controller.cc:783)
+	BrowserTabStripController::OnTabStripModelChanged [0x00007FFB4AF4C2F2+514] (D:\chromium120\src\chrome\browser\ui\views\tabs\browser_tab_strip_controller.cc:611)
+	TabStripModel::OnChange [0x00007FFB4855F6F4+420] (D:\chromium120\src\chrome\browser\ui\tabs\tab_strip_model.cc:417)
+	TabStripModel::InsertWebContentsAtImpl [0x00007FFB4855EC95+1269] (D:\chromium120\src\chrome\browser\ui\tabs\tab_strip_model.cc:1872)
+	TabStripModel::AddWebContents [0x00007FFB48567D20+1456] (D:\chromium120\src\chrome\browser\ui\tabs\tab_strip_model.cc:985)
+	Navigate [0x00007FFB48002EC2+4770] (D:\chromium120\src\chrome\browser\ui\browser_navigator.cc:858)
+	StartupBrowserCreatorImpl::OpenTabsInBrowser [0x00007FFB4BA2204A+1594] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator_impl.cc:331)
+	StartupBrowserCreatorImpl::RestoreOrCreateBrowser [0x00007FFB4BA2334F+687] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator_impl.cc:665)
+	StartupBrowserCreatorImpl::DetermineURLsAndLaunch [0x00007FFB4BA2168A+2042] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator_impl.cc:458)
+	StartupBrowserCreatorImpl::Launch [0x00007FFB4BA20D67+231] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator_impl.cc:189)
+	StartupBrowserCreator::LaunchBrowser [0x00007FFB49AECC65+1365] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator.cc:698)
+	StartupBrowserCreator::ProcessLastOpenedProfiles [0x00007FFB49AEDF91+1217] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator.cc:1363)
+	StartupBrowserCreator::LaunchBrowserForLastProfiles [0x00007FFB49AED7EA+1162] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator.cc:782)
+	StartupBrowserCreator::ProcessCmdLineImpl [0x00007FFB49AEC587+7543] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator.cc:1310)
+	StartupBrowserCreator::Start [0x00007FFB49AEA793+499] (D:\chromium120\src\chrome\browser\ui\startup\startup_browser_creator.cc:647)
+	ChromeBrowserMainParts::PreMainMessageLoopRunImpl [0x00007FFB483B40C0+3024] (D:\chromium120\src\chrome\browser\chrome_browser_main.cc:1714)
+	ChromeBrowserMainParts::PreMainMessageLoopRun [0x00007FFB483B33F5+373] (D:\chromium120\src\chrome\browser\chrome_browser_main.cc:1195)
+	content::BrowserMainLoop::PreMainMessageLoopRun [0x00007FFB3A912173+419] (D:\chromium120\src\content\browser\browser_main_loop.cc:1002)
+	base::internal::FunctorTraits<int (content::BrowserMainLoop::*)(),void>::Invoke<int (content::BrowserMainLoop::*)(),content::BrowserMainLoop *> [0x00007FFB3A91C68A+26] (D:\chromium120\src\base\functional\bind_internal.h:713)
+	base::internal::InvokeHelper<0,int,0>::MakeItSo<int (content::BrowserMainLoop::*)(),std::__Cr::tuple<base::internal::UnretainedWrapper<content::BrowserMainLoop,base::unretained_traits::MayNotDangle,0> > > [0x00007FFB3A91C656+70] (D:\chromium120\src\base\functional\bind_internal.h:868)
+	base::internal::Invoker<base::internal::BindState<int (content::BrowserMainLoop::*)(),base::internal::UnretainedWrapper<content::BrowserMainLoop,base::unretained_traits::MayNotDangle,0> >,int ()>::RunImpl<int (content::BrowserMainLoop::*)(),std::__Cr::tup [0x00007FFB3A91C602+34] (D:\chromium120\src\base\functional\bind_internal.h:968)
+	base::internal::Invoker<base::internal::BindState<int (content::BrowserMainLoop::*)(),base::internal::UnretainedWrapper<content::BrowserMainLoop,base::unretained_traits::MayNotDangle,0> >,int ()>::RunOnce [0x00007FFB3A91C53E+62] (D:\chromium120\src\base\functional\bind_internal.h:919)
+	base::OnceCallback<int ()>::Run [0x00007FFB3C45CEB6+230] (D:\chromium120\src\base\functional\callback.h:153)
+	content::StartupTaskRunner::RunAllTasksNow [0x00007FFB3C45CCA5+133] (D:\chromium120\src\content\browser\startup_task_runner.cc:42)
+	content::BrowserMainLoop::CreateStartupTasks [0x00007FFB3A9118D4+1204] (D:\chromium120\src\content\browser\browser_main_loop.cc:915)
+	content::BrowserMainRunnerImpl::Initialize [0x00007FFB3A921651+1169] (D:\chromium120\src\content\browser\browser_main_runner_impl.cc:139)
+	content::BrowserMain [0x00007FFB3A90CF05+373] (D:\chromium120\src\content\browser\browser_main.cc:30)
+	content::RunBrowserProcessMain [0x00007FFB3DB7947E+430] (D:\chromium120\src\content\app\content_main_runner_impl.cc:707)
+	content::ContentMainRunnerImpl::RunBrowser [0x00007FFB3DB7BE63+2323] (D:\chromium120\src\content\app\content_main_runner_impl.cc:1298)
+	content::ContentMainRunnerImpl::Run [0x00007FFB3DB7B274+1284] (D:\chromium120\src\content\app\content_main_runner_impl.cc:1142)
+	content::RunContentProcess [0x00007FFB3DB77D99+745] (D:\chromium120\src\content\app\content_main.cc:334)
+	content::ContentMain [0x00007FFB3DB781A1+81] (D:\chromium120\src\content\app\content_main.cc:347)
+	ChromeMain [0x00007FFB4156150B+971] (D:\chromium120\src\chrome\app\chrome_main.cc:190)
+	MainDllLoader::Launch [0x00007FF73978724D+605] (D:\chromium120\src\chrome\app\main_dll_loader_win.cc:169)
+	wWinMain [0x00007FF7397817F1+1921] (D:\chromium120\src\chrome\app\chrome_exe_main_win.cc:390)
+	invoke_main [0x00007FF7399B4ED2+50] (D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:123)
+	__scrt_common_main_seh [0x00007FF7399B500E+302] (D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288)
+	__scrt_common_main [0x00007FF7399B508E+14] (D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331)
+	wWinMainCRTStartup [0x00007FF7399B50AE+14] (D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_wwinmain.cpp:17)
+	BaseThreadInitThunk [0x00007FFBC4DC7344+20]
+	RtlUserThreadStart [0x00007FFBC62626B1+33]
+Crash keys:
+  "num-extensions" = "0"
+  "breadcrumbs" = "0:00:00 Tab1 StartNav1 #auto_toplevel
+0:00:00 Startup
+"
+  "is-enterprise-managed" = "no"
+  "reentry_guard_tls_slot" = "unused"
+  "num-switches" = "2"
+
+[3280:11140:1021/062745.115:INFO:child_thread_impl.cc(926)] ChildThreadImpl::EnsureConnected()
+[9128:8960:1021/062745.334:INFO:child_thread_impl.cc(926)] ChildThreadImpl::EnsureConnected()
