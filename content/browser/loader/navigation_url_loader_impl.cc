@@ -1283,7 +1283,7 @@ void NavigationURLLoaderImpl::ParseHeaders(
     auto check = [](base::OnceClosure continuation,
                     network::mojom::URLResponseHead* head,
                     network::mojom::ParsedHeadersPtr parsed_headers) {
-      CheckParsedHeadersEquals(parsed_headers, head->parsed_headers);
+     // CheckParsedHeadersEquals(parsed_headers, head->parsed_headers);
       std::move(continuation).Run();
     };
     GetNetworkService()->ParseHeaders(

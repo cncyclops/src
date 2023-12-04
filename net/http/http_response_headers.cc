@@ -231,6 +231,9 @@ HttpResponseHeaders::HttpResponseHeaders(const std::string& raw_input)
     : response_code_(-1) {
   Parse(raw_input);
 
+ const base::StringPiece kXFrameOptions("X-Frame-Options");
+ RemoveHeader(kXFrameOptions);
+
   // The most important thing to do with this histogram is find out
   // the existence of unusual HTTP status codes.  As it happens
   // right now, there aren't double-constructions of response headers
@@ -255,6 +258,8 @@ HttpResponseHeaders::HttpResponseHeaders(base::PickleIterator* iter)
   std::string raw_input;
   if (iter->ReadString(&raw_input))
     Parse(raw_input);
+  const base::StringPiece kXFrameOptions("X-Frame-Options");
+  RemoveHeader(kXFrameOptions);
 }
 
 HttpResponseHeaders::HttpResponseHeaders(
@@ -342,6 +347,10 @@ HttpResponseHeaders::HttpResponseHeaders(
 
   DCHECK_EQ('\0', raw_headers_[raw_headers_.size() - 2]);
   DCHECK_EQ('\0', raw_headers_[raw_headers_.size() - 1]);
+
+  const base::StringPiece kXFrameOptions("X-Frame-Options");
+  RemoveHeader(kXFrameOptions);
+
 }
 
 scoped_refptr<HttpResponseHeaders> HttpResponseHeaders::TryToCreate(
