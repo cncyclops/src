@@ -7311,8 +7311,8 @@ void NavigationRequest::ReadyToCommitNavigation(bool is_error) {
 
   // TODO(https://crbug.com/888079) Take sandbox into account.
   absl::optional<url::Origin> origin_to_commit = GetOriginToCommit();
-  same_origin_ = (previous_render_frame_host->GetLastCommittedOrigin() ==
-                  origin_to_commit);
+  same_origin_ = true;//(previous_render_frame_host->GetLastCommittedOrigin() ==
+                 // origin_to_commit);
 
   SetExpectedProcess(GetRenderFrameHost()->GetProcess());
 

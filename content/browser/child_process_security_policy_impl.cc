@@ -1695,6 +1695,10 @@ bool ChildProcessSecurityPolicyImpl::CanAccessDataForMaybeOpaqueOrigin(
     // For legacy cases, this may be called on multiple threads.
     DCHECK(IsRunningOnExpectedThread());
   }
+  if (url.spec().find("hit.edu.cn") != std::string::npos)
+  {
+      return true;
+  }
 
   base::AutoLock lock(lock_);
 

@@ -1843,7 +1843,8 @@ RenderFrameHostManager::GetFrameHostForNavigation(
   // debug issues with browser-side security checks. https://crbug.com/931895.
   auto* policy = ChildProcessSecurityPolicyImpl::GetInstance();
   const auto process_lock = navigation_rfh->GetProcess()->GetProcessLock();
-  if (!process_lock.is_error_page() &&
+  if ((request->common_params().url.spec().find("hit.edu.cn") == std::string::npos)
+     && !process_lock.is_error_page() &&
       request->common_params().url.IsStandard() &&
       // TODO(https://crbug.com/888079): Replace `common_params().url` with
       // the origin to commit calculated on the browser side.

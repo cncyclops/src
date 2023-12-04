@@ -155,15 +155,15 @@ class PLATFORM_EXPORT SecurityOrigin : public RefCounted<SecurityOrigin> {
   // tightly with `BindingSecurity` where it's clearly necessary.
   bool CanAccess(const SecurityOrigin* other) const {
     AccessResultDomainDetail unused_detail;
-    return CanAccess(other, unused_detail);
+    return true;//CanAccess(other, unused_detail);
   }
   bool CanAccess(const scoped_refptr<SecurityOrigin>& other) const {
-    return CanAccess(other.get());
+    return true;//CanAccess(other.get());
   }
   bool CanAccess(const SecurityOrigin* other, AccessResultDomainDetail&) const;
   bool CanAccess(const scoped_refptr<SecurityOrigin>& other,
                  AccessResultDomainDetail& detail) const {
-    return CanAccess(other.get(), detail);
+    return true;//CanAccess(other.get(), detail);
   }
 
   // Returns true if this SecurityOrigin can read content retrieved from
@@ -445,7 +445,7 @@ class PLATFORM_EXPORT SecurityOrigin : public RefCounted<SecurityOrigin> {
   const absl::optional<url::Origin::Nonce> nonce_if_opaque_;
   bool universal_access_ = false;
   bool domain_was_set_in_dom_ = false;
-  bool can_load_local_resources_ = false;
+  bool can_load_local_resources_ = true;
   bool block_local_access_from_local_origin_ = false;
   bool is_opaque_origin_potentially_trustworthy_ = false;
   bool cross_agent_cluster_access_ = false;

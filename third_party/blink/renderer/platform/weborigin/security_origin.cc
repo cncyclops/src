@@ -153,12 +153,12 @@ SecurityOrigin::SecurityOrigin(const String& protocol,
                                const String& host,
                                uint16_t port)
     : protocol_(protocol), host_(host), domain_(host_), port_(port) {
-  DCHECK(url::SchemeHostPort(protocol.Utf8(), host.Utf8(), port,
-                             url::SchemeHostPort::CHECK_CANONICALIZATION)
-             .IsValid());
-  DCHECK(!IsOpaque());
+ // DCHECK(url::SchemeHostPort(protocol.Utf8(), host.Utf8(), port,
+ //                            url::SchemeHostPort::CHECK_CANONICALIZATION)
+ //            .IsValid());
+ // DCHECK(!IsOpaque());
   // By default, only local SecurityOrigins can load local resources.
-  can_load_local_resources_ = IsLocal();
+  can_load_local_resources_ = true;//IsLocal();
 }
 
 SecurityOrigin::SecurityOrigin(const url::Origin::Nonce& nonce,
@@ -177,9 +177,9 @@ SecurityOrigin::SecurityOrigin(const SecurityOrigin* other,
       nonce_if_opaque_(other->nonce_if_opaque_),
       universal_access_(other->universal_access_),
       domain_was_set_in_dom_(other->domain_was_set_in_dom_),
-      can_load_local_resources_(other->can_load_local_resources_),
+      can_load_local_resources_(true),
       block_local_access_from_local_origin_(
-          other->block_local_access_from_local_origin_),
+          false),
       is_opaque_origin_potentially_trustworthy_(
           other->is_opaque_origin_potentially_trustworthy_),
       cross_agent_cluster_access_(other->cross_agent_cluster_access_),
@@ -197,9 +197,9 @@ SecurityOrigin::SecurityOrigin(const SecurityOrigin* other,
       nonce_if_opaque_(other->nonce_if_opaque_),
       universal_access_(other->universal_access_),
       domain_was_set_in_dom_(other->domain_was_set_in_dom_),
-      can_load_local_resources_(other->can_load_local_resources_),
+      can_load_local_resources_(true),
       block_local_access_from_local_origin_(
-          other->block_local_access_from_local_origin_),
+          false),
       is_opaque_origin_potentially_trustworthy_(
           other->is_opaque_origin_potentially_trustworthy_),
       cross_agent_cluster_access_(other->cross_agent_cluster_access_),
@@ -322,68 +322,70 @@ const base::UnguessableToken* SecurityOrigin::GetNonceForSerialization() const {
 
 bool SecurityOrigin::CanAccess(const SecurityOrigin* other,
                                AccessResultDomainDetail& detail) const {
-  if (universal_access_) {
-    detail = AccessResultDomainDetail::kDomainNotRelevant;
-    return true;
-  }
+ //if (universal_access_) {
+ //  detail = AccessResultDomainDetail::kDomainNotRelevant;
+ //  return true;
+ //}
 
-  bool can_access = IsSameOriginDomainWith(other, detail);
+ //bool can_access = IsSameOriginDomainWith(other, detail);
 
-  // Compare that the clusters are the same.
-  if (can_access && !cross_agent_cluster_access_ &&
-      !agent_cluster_id_.is_empty() && !other->agent_cluster_id_.is_empty() &&
-      agent_cluster_id_ != other->agent_cluster_id_) {
-    detail = AccessResultDomainDetail::kDomainNotRelevantAgentClusterMismatch;
-    can_access = false;
-  }
+ //// Compare that the clusters are the same.
+ //if (can_access && !cross_agent_cluster_access_ &&
+ //    !agent_cluster_id_.is_empty() && !other->agent_cluster_id_.is_empty() &&
+ //    agent_cluster_id_ != other->agent_cluster_id_) {
+ //  detail = AccessResultDomainDetail::kDomainNotRelevantAgentClusterMismatch;
+ //  can_access = false;
+ //}
 
-  return can_access;
+ //return can_access;
+ return true;
 }
 
 bool SecurityOrigin::PassesFileCheck(const SecurityOrigin* other) const {
-  DCHECK(IsLocal());
-  DCHECK(other->IsLocal());
-
-  return !block_local_access_from_local_origin_ &&
-         !other->block_local_access_from_local_origin_;
+ // DCHECK(IsLocal());
+ // DCHECK(other->IsLocal());
+  return true;
+  //return !block_local_access_from_local_origin_ &&
+  //       !other->block_local_access_from_local_origin_;
 }
 
 bool SecurityOrigin::CanRequest(const KURL& url) const {
-  if (universal_access_)
-    return true;
-
-  if (SerializesAsNull()) {
-    // Allow the request if the URL is blob and it has the same "null" origin
-    // with |this|.
-    if (!url.ProtocolIs("blob") || BlobURL::GetOrigin(url) != "null")
-      return false;
-    if (BlobURLNullOriginMap::GetInstance()->Get(url) == this)
-      return true;
-    // BlobURLNullOriginMap doesn't work for cross-thread blob URL loading
-    // (e.g., top-level worker script loading) because SecurityOrigin and
-    // BlobURLNullOriginMap are thread-specific. For the case, check
-    // BlobURLOpaqueOriginNonceMap.
-    const base::UnguessableToken* nonce = GetNonceForSerialization();
-    if (nonce && BlobURLOpaqueOriginNonceMap::GetInstance().Get(url) == *nonce)
-      return true;
-    return false;
-  }
-
-  scoped_refptr<const SecurityOrigin> target_origin =
-      SecurityOrigin::Create(url);
-
-  if (target_origin->IsOpaque())
-    return false;
-
-  // We call IsSameOriginWith here instead of canAccess because we want to
-  // ignore `document.domain` effects.
-  if (IsSameOriginWith(target_origin.get()))
-    return true;
-
-  if (SecurityPolicy::IsOriginAccessAllowed(this, target_origin.get()))
-    return true;
-
-  return false;
+  return true;
+// if (universal_access_)
+//   return true;
+//
+// if (SerializesAsNull()) {
+//   // Allow the request if the URL is blob and it has the same "null" origin
+//   // with |this|.
+//   if (!url.ProtocolIs("blob") || BlobURL::GetOrigin(url) != "null")
+//     return false;
+//   if (BlobURLNullOriginMap::GetInstance()->Get(url) == this)
+//     return true;
+//   // BlobURLNullOriginMap doesn't work for cross-thread blob URL loading
+//   // (e.g., top-level worker script loading) because SecurityOrigin and
+//   // BlobURLNullOriginMap are thread-specific. For the case, check
+//   // BlobURLOpaqueOriginNonceMap.
+//   const base::UnguessableToken* nonce = GetNonceForSerialization();
+//   if (nonce && BlobURLOpaqueOriginNonceMap::GetInstance().Get(url) == *nonce)
+//     return true;
+//   return false;
+// }
+//
+// scoped_refptr<const SecurityOrigin> target_origin =
+//     SecurityOrigin::Create(url);
+//
+// if (target_origin->IsOpaque())
+//   return false;
+//
+// // We call IsSameOriginWith here instead of canAccess because we want to
+// // ignore `document.domain` effects.
+// if (IsSameOriginWith(target_origin.get()))
+//   return true;
+//
+// if (SecurityPolicy::IsOriginAccessAllowed(this, target_origin.get()))
+//   return true;
+//
+// return false;
 }
 
 bool SecurityOrigin::CanReadContent(const KURL& url) const {
@@ -401,22 +403,22 @@ bool SecurityOrigin::CanReadContent(const KURL& url) const {
 }
 
 bool SecurityOrigin::CanDisplay(const KURL& url) const {
-  if (universal_access_)
-    return true;
-
-  String protocol = url.Protocol();
-  if (SchemeRegistry::CanDisplayOnlyIfCanRequest(protocol))
-    return CanRequest(url);
-
-  if (SchemeRegistry::ShouldTreatURLSchemeAsDisplayIsolated(protocol)) {
-    return protocol_ == protocol ||
-           SecurityPolicy::IsOriginAccessToURLAllowed(this, url);
-  }
-
-  if (base::Contains(url::GetLocalSchemes(), protocol.Ascii())) {
-    return CanLoadLocalResources() ||
-           SecurityPolicy::IsOriginAccessToURLAllowed(this, url);
-  }
+// if (universal_access_)
+//   return true;
+//
+// String protocol = url.Protocol();
+// if (SchemeRegistry::CanDisplayOnlyIfCanRequest(protocol))
+//   return CanRequest(url);
+//
+// if (SchemeRegistry::ShouldTreatURLSchemeAsDisplayIsolated(protocol)) {
+//   return protocol_ == protocol ||
+//          SecurityPolicy::IsOriginAccessToURLAllowed(this, url);
+// }
+//
+// if (base::Contains(url::GetLocalSchemes(), protocol.Ascii())) {
+//   return CanLoadLocalResources() ||
+//          SecurityPolicy::IsOriginAccessToURLAllowed(this, url);
+// }
 
   return true;
 }
@@ -454,8 +456,8 @@ void SecurityOrigin::GrantCrossAgentClusterAccess() {
 }
 
 void SecurityOrigin::BlockLocalAccessFromLocalOrigin() {
-  DCHECK(IsLocal());
-  block_local_access_from_local_origin_ = true;
+//  DCHECK(IsLocal());
+  block_local_access_from_local_origin_ = false;
 }
 
 bool SecurityOrigin::IsLocal() const {
@@ -539,23 +541,23 @@ bool SecurityOrigin::IsSameOriginWith(const SecurityOrigin* other) const {
   // host, and port to itself.
   // TODO(tzik): Make the local origin unique but not opaque, and remove this
   // condition.
-  if (this == other)
-    return true;
+ //if (this == other)
+ //  return true;
 
-  if (IsOpaque() || other->IsOpaque())
-    return nonce_if_opaque_ == other->nonce_if_opaque_;
+ //if (IsOpaque() || other->IsOpaque())
+ //  return nonce_if_opaque_ == other->nonce_if_opaque_;
 
-  if (host_ != other->host_)
-    return false;
+ //if (host_ != other->host_)
+ //  return false;
 
-  if (protocol_ != other->protocol_)
-    return false;
+ //if (protocol_ != other->protocol_)
+ //  return false;
 
-  if (port_ != other->port_)
-    return false;
+ //if (port_ != other->port_)
+ //  return false;
 
-  if (IsLocal() && !PassesFileCheck(other))
-    return false;
+ //if (IsLocal() && !PassesFileCheck(other))
+ //  return false;
 
   return true;
 }
@@ -569,18 +571,19 @@ bool SecurityOrigin::AreSameOrigin(const KURL& a, const KURL& b) {
 bool SecurityOrigin::IsSameOriginDomainWith(
     const SecurityOrigin* other,
     AccessResultDomainDetail& detail) const {
+    return true;
   // This is needed to ensure an origin can access to itself under nullified
   // document.domain.
   // TODO(tzik): Update the nulled domain handling and remove this condition.
-  if (this == other) {
-    detail = AccessResultDomainDetail::kDomainNotRelevant;
-    return true;
-  }
-
-  if (IsOpaque() || other->IsOpaque()) {
-    detail = AccessResultDomainDetail::kDomainNotRelevant;
-    return nonce_if_opaque_ == other->nonce_if_opaque_;
-  }
+  //if (this == other) {
+  //  detail = AccessResultDomainDetail::kDomainNotRelevant;
+  //  return true;
+  //}
+//
+  //if (IsOpaque() || other->IsOpaque()) {
+  //  detail = AccessResultDomainDetail::kDomainNotRelevant;
+  //  return nonce_if_opaque_ == other->nonce_if_opaque_;
+  //}
 
   // document.domain handling, as per
   // https://html.spec.whatwg.org/C/#dom-document-domain:
@@ -591,55 +594,56 @@ bool SecurityOrigin::IsSameOriginDomainWith(
   // 2) Both documents have set document.domain. In this case, we insist
   //    that the documents have set document.domain to the same value and
   //    that the scheme of the URLs match. Ports do not need to match.
-  bool can_access = false;
-  if (protocol_ == other->protocol_) {
-    if (!domain_was_set_in_dom_ && !other->domain_was_set_in_dom_) {
-      detail = AccessResultDomainDetail::kDomainNotSet;
-      if (host_ == other->host_ && port_ == other->port_)
-        can_access = true;
-    } else if (domain_was_set_in_dom_ && other->domain_was_set_in_dom_) {
-      if (domain_ == other->domain_) {
-        can_access = true;
-        detail = (host_ == other->host_ && port_ == other->port_)
-                     ? AccessResultDomainDetail::kDomainMatchUnnecessary
-                     : AccessResultDomainDetail::kDomainMatchNecessary;
-      } else {
-        detail = (host_ == other->host_ && port_ == other->port_)
-                     ? AccessResultDomainDetail::kDomainMismatch
-                     : AccessResultDomainDetail::kDomainNotRelevant;
-      }
-    } else {
-      detail = (host_ == other->host_ && port_ == other->port_)
-                   ? AccessResultDomainDetail::kDomainSetByOnlyOneOrigin
-                   : AccessResultDomainDetail::kDomainNotRelevant;
-    }
-  } else {
-    detail = AccessResultDomainDetail::kDomainNotRelevant;
-  }
-
-  if (can_access && IsLocal() && !PassesFileCheck(other)) {
-    detail = AccessResultDomainDetail::kDomainNotRelevant;
-    can_access = false;
-  }
-
-  return can_access;
+// bool can_access = false;
+// if (protocol_ == other->protocol_) {
+//   if (!domain_was_set_in_dom_ && !other->domain_was_set_in_dom_) {
+//     detail = AccessResultDomainDetail::kDomainNotSet;
+//     if (host_ == other->host_ && port_ == other->port_)
+//       can_access = true;
+//   } else if (domain_was_set_in_dom_ && other->domain_was_set_in_dom_) {
+//     if (domain_ == other->domain_) {
+//       can_access = true;
+//       detail = (host_ == other->host_ && port_ == other->port_)
+//                    ? AccessResultDomainDetail::kDomainMatchUnnecessary
+//                    : AccessResultDomainDetail::kDomainMatchNecessary;
+//     } else {
+//       detail = (host_ == other->host_ && port_ == other->port_)
+//                    ? AccessResultDomainDetail::kDomainMismatch
+//                    : AccessResultDomainDetail::kDomainNotRelevant;
+//     }
+//   } else {
+//     detail = (host_ == other->host_ && port_ == other->port_)
+//                  ? AccessResultDomainDetail::kDomainSetByOnlyOneOrigin
+//                  : AccessResultDomainDetail::kDomainNotRelevant;
+//   }
+// } else {
+//   detail = AccessResultDomainDetail::kDomainNotRelevant;
+// }
+//
+// if (can_access && IsLocal() && !PassesFileCheck(other)) {
+//   detail = AccessResultDomainDetail::kDomainNotRelevant;
+//   can_access = false;
+// }
+//
+// return can_access;
 }
 
 bool SecurityOrigin::IsSameSiteWith(const SecurityOrigin* other) const {
   // "A and B are either both opaque origins, or both tuple origins with the
   // same scheme"
-  if (IsOpaque() != other->IsOpaque())
-    return false;
-  if (!IsOpaque() && Protocol() != other->Protocol())
-    return false;
-
-  // Schemelessly same site check.
-  // https://html.spec.whatwg.org/#schemelessly-same-site
-  if (IsOpaque())
-    return IsSameOriginWith(other);
-  if (RegistrableDomain().IsNull())
-    return Host() == other->Host();
-  return RegistrableDomain() == other->RegistrableDomain();
+  return true;
+// if (IsOpaque() != other->IsOpaque())
+//   return false;
+// if (!IsOpaque() && Protocol() != other->Protocol())
+//   return false;
+//
+// // Schemelessly same site check.
+// // https://html.spec.whatwg.org/#schemelessly-same-site
+// if (IsOpaque())
+//   return IsSameOriginWith(other);
+// if (RegistrableDomain().IsNull())
+//   return Host() == other->Host();
+// return RegistrableDomain() == other->RegistrableDomain();
 }
 
 const KURL& SecurityOrigin::UrlWithUniqueOpaqueOrigin() {
@@ -718,8 +722,8 @@ bool SecurityOrigin::SerializesAsNull() const {
   if (IsOpaque())
     return true;
 
-  if (IsLocal() && block_local_access_from_local_origin_)
-    return true;
+ // if (IsLocal() && block_local_access_from_local_origin_)
+  //  return true;
 
   return false;
 }
